@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kế Hoạch Giảm Mỡ & Tăng Cơ — Nguyễn Anh Tuấn</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+  :root {
+    --bg: #f7f5f2;
+    --fg: #2c2420;
+    --surface: #ffffff;
+    --surface-alt: #f0ece7;
+    --accent: #c0392b;
+    --accent-soft: #e8d5d2;
+    --accent-dim: rgba(192,57,43,0.08);
+    --muted: #8a7e76;
+    --border: #e0dbd5;
+    --success: #27ae60;
+    --warning: #e67e22;
+    --info: #2980b9;
+    --font-display: 'Libre Baskerville', Georgia, serif;
+    --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2.5rem;
+    --space-2xl: 4rem;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1614; --fg: #e8e2dc; --surface: #262120; --surface-alt: #302a27;
+      --accent: #e74c3c; --accent-soft: #3d2522; --accent-dim: rgba(231,76,60,0.12);
+      --muted: #9a8e86; --border: #3a3430; --success: #2ecc71; --warning: #f39c12; --info: #3498db;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1614; --fg: #e8e2dc; --surface: #262120; --surface-alt: #302a27;
+    --accent: #e74c3c; --accent-soft: #3d2522; --accent-dim: rgba(231,76,60,0.12);
+    --muted: #9a8e86; --border: #3a3430; --success: #2ecc71; --warning: #f39c12; --info: #3498db;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--font-body);
+    font-size: 15px; line-height: 1.65; padding: 0 16px; max-width: 780px; margin: 0 auto;
+  }
+  h1,h2,h3 { font-family: var(--font-display); text-wrap: balance; }
+  img { max-width: 100%; }
+
+  .hero { text-align: center; padding: var(--space-2xl) 0 var(--space-xl); border-bottom: 2px solid var(--border); margin-bottom: var(--space-xl); }
+  .hero-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: var(--space-sm); }
+  .hero h1 { font-size: clamp(1.5rem, 4vw, 2.1rem); font-weight: 700; margin: var(--space-sm) 0; line-height: 1.25; }
+  .hero .client-name { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin: var(--space-md) 0 var(--space-sm); }
+  .hero p { color: var(--muted); font-size: 0.9rem; max-width: 480px; margin: 0 auto; }
+
+  .photos-section { margin-bottom: var(--space-xl); }
+  .photos-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+  @media (max-width: 520px) { .photos-grid { grid-template-columns: repeat(2, 1fr); } }
+  .photo-card {
+    border-radius: var(--radius); overflow: hidden; border: 2px solid var(--border);
+    aspect-ratio: 9/16; background: var(--surface-alt);
+  }
+  .photo-card img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-label { text-align: center; font-size: 0.72rem; color: var(--muted); margin-top: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+  .photos-date { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: var(--space-md); }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-xl); }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-lg); text-align: center; }
+  .stat-card .value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat-card .label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: var(--space-xs); }
+
+  .section { margin-bottom: var(--space-2xl); }
+  .section-header { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-sm); border-bottom: 2px solid var(--border); }
+  .section-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-dim); display: grid; place-items: center; font-size: 1.1rem; flex-shrink: 0; }
+  .section-header h2 { font-size: 1.2rem; margin: 0; line-height: 1.3; }
+  .section-header .sub { font-family: var(--font-body); font-size: 0.78rem; color: var(--muted); font-weight: 400; }
+
+  .assessment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+  @media (max-width: 480px) { .assessment-grid { grid-template-columns: 1fr; } }
+  .assess-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-md) var(--space-lg); }
+  .assess-item .tag { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--warning); margin-bottom: 4px; }
+  .assess-item .tag.good { color: var(--success); }
+  .assess-item .tag.warn { color: var(--warning); }
+  .assess-item .tag.note { color: var(--info); }
+  .assess-item h4 { margin: 0; font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; }
+  .assess-item p { margin: 4px 0 0; font-size: 0.82rem; color: var(--muted); }
+
+  .macro-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; margin: var(--space-lg) 0 var(--space-md); }
+  .macro-bar .seg-protein { background: var(--accent); flex: 35; }
+  .macro-bar .seg-fat { background: var(--warning); flex: 30; }
+  .macro-bar .seg-carb { background: var(--info); flex: 35; }
+  .macro-legend { display: flex; flex-wrap: wrap; gap: var(--space-lg); margin-bottom: var(--space-lg); }
+  .macro-item { display: flex; align-items: center; gap: var(--space-sm); }
+  .macro-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .macro-dot.protein { background: var(--accent); }
+  .macro-dot.fat { background: var(--warning); }
+  .macro-dot.carb { background: var(--info); }
+  .macro-item .name { font-size: 0.82rem; color: var(--muted); }
+  .macro-item .val { font-weight: 600; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+
+  .meal-plan { display: flex; flex-direction: column; gap: var(--space-md); }
+  .meal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .meal-header { display: flex; justify-content: space-between; align-items: center; padding: var(--space-md) var(--space-lg); background: var(--surface-alt); border-bottom: 1px solid var(--border); }
+  .meal-header h4 { margin: 0; font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; }
+  .meal-header .time { font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .meal-body { padding: var(--space-md) var(--space-lg); }
+  .meal-body ul { margin: 0; padding: 0; list-style: none; }
+  .meal-body li { padding: 6px 0; font-size: 0.88rem; display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-md); border-bottom: 1px dashed var(--border); }
+  .meal-body li:last-child { border-bottom: none; }
+  .meal-body .food { flex: 1; min-width: 0; }
+  .meal-body .amt { color: var(--muted); font-size: 0.78rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .training-week { display: flex; flex-direction: column; gap: var(--space-lg); }
+  .day-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .day-header { display: flex; justify-content: space-between; align-items: center; padding: var(--space-md) var(--space-lg); background: var(--accent-dim); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: var(--space-sm); }
+  .day-header.rest { background: var(--surface-alt); }
+  .day-header h4 { margin: 0; font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; }
+  .day-header .badge { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: var(--accent-soft); color: var(--accent); }
+  .day-header .badge.rest-badge { background: var(--surface-alt); color: var(--muted); }
+  .day-body { padding: var(--space-md) var(--space-lg); }
+
+  /* Exercise cards with GIF */
+  .exercise-list { display: flex; flex-direction: column; gap: var(--space-md); }
+  .ex-card {
+    display: grid; grid-template-columns: 120px 1fr; gap: var(--space-md);
+    padding: var(--space-md); background: var(--surface-alt); border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  @media (max-width: 480px) {
+    .ex-card { grid-template-columns: 1fr; }
+    .ex-card .ex-gif-wrap { max-width: 180px; margin: 0 auto; }
+  }
+  .ex-gif-wrap {
+    border-radius: var(--radius-sm); overflow: hidden; background: #1a1a2e;
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .ex-gif-wrap img {
+    width: 100%; height: 100%; object-fit: contain;
+  }
+  .ex-info { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .ex-info h5 { margin: 0; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; line-height: 1.3; }
+  .ex-info .en { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
+  .ex-meta { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: 4px; }
+  .ex-meta span { font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .ex-meta .sets { font-weight: 600; color: var(--accent); }
+  .ex-tip { font-size: 0.76rem; color: var(--muted); margin-top: 4px; font-style: italic; }
+
+  .tip-box { background: var(--accent-dim); border-left: 3px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: var(--space-md) var(--space-lg); margin: var(--space-lg) 0; font-size: 0.85rem; }
+  .tip-box strong { display: block; margin-bottom: 4px; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-md); }
+  .shop-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-lg); }
+  .shop-card h4 { margin: 0 0 var(--space-sm); font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; }
+  .shop-card ul { margin: 0; padding: 0; list-style: none; }
+  .shop-card li { font-size: 0.84rem; padding: 3px 0; }
+
+  .phase-timeline { display: flex; flex-direction: column; position: relative; padding-left: 28px; }
+  .phase-timeline::before { content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .phase-item { position: relative; padding: var(--space-md) 0; }
+  .phase-item::before { content: ''; position: absolute; left: -24px; top: 22px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 3px solid var(--bg); }
+  .phase-item h4 { margin: 0; font-family: var(--font-body); font-size: 0.92rem; font-weight: 600; }
+  .phase-item .duration { font-size: 0.75rem; color: var(--accent); font-weight: 500; margin-bottom: 4px; }
+  .phase-item p { margin: 4px 0 0; font-size: 0.84rem; color: var(--muted); }
+
+  .supp-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .supp-item { display: flex; align-items: baseline; gap: var(--space-md); padding: var(--space-sm) 0; border-bottom: 1px dashed var(--border); font-size: 0.86rem; }
+  .supp-item:last-child { border-bottom: none; }
+  .supp-item .supp-name { font-weight: 600; white-space: nowrap; }
+  .supp-item .supp-desc { color: var(--muted); font-size: 0.82rem; }
+
+  .footer { text-align: center; padding: var(--space-xl) 0 var(--space-2xl); border-top: 2px solid var(--border); margin-top: var(--space-xl); color: var(--muted); font-size: 0.78rem; }
+
+  details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: var(--space-md); }
+  details summary { padding: var(--space-md) var(--space-lg); cursor: pointer; font-weight: 600; font-size: 0.9rem; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: '+'; font-size: 1.2rem; color: var(--muted); }
+  details[open] summary::after { content: '−'; }
+  details .detail-body { padding: 0 var(--space-lg) var(--space-lg); font-size: 0.86rem; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Chương Trình Cá Nhân Hóa</div>
+  <h1>Kế Hoạch Giảm Mỡ &<br>Xây Dựng Cơ Bắp</h1>
+  <div class="client-name">Nguyễn Anh Tuấn</div>
+  <p>Nam, 28 tuổi · 167 cm · 70 kg · Newbie<br>Mục tiêu: Giảm mỡ bụng, tăng cơ, cơ thể săn chắc</p>
+</div>
+
+<!-- ẢNH ĐÁNH GIÁ BAN ĐẦU -->
+<div class="section photos-section">
+  <div class="section-header">
+    <div class="section-icon">📸</div>
+    <div>
+      <h2>Ảnh Đánh Giá Ban Đầu</h2>
+      <div class="sub">Nguyễn Anh Tuấn — Trước khi bắt đầu chương trình</div>
+    </div>
+  </div>
+  <div class="photos-grid">
+    <div>
+      <div class="photo-card"><img src="1.png" alt="Nghiêng phải"></div>
+      <div class="photo-label">Nghiêng phải</div>
+    </div>
+    <div>
+      <div class="photo-card"><img src="2.png" alt="Nghiêng trái"></div>
+      <div class="photo-label">Nghiêng trái</div>
+    </div>
+    <div>
+      <div class="photo-card"><img src="3.png" alt="Sau lưng"></div>
+      <div class="photo-label">Sau lưng</div>
+    </div>
+    <div>
+      <div class="photo-card"><img src="4.png" alt="Trước mặt"></div>
+      <div class="photo-label">Trước mặt</div>
+    </div>
+  </div>
+  <div class="photos-date">Ngày chụp: 10/10/2026 · Cân nặng: 70 kg · Vòng eo: chưa đo</div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-card"><div class="value">25.1</div><div class="label">BMI</div></div>
+  <div class="stat-card"><div class="value">~25%</div><div class="label">% Mỡ (ước tính)</div></div>
+  <div class="stat-card"><div class="value">1,800</div><div class="label">Kcal/ngày</div></div>
+  <div class="stat-card"><div class="value">4 buổi</div><div class="label">Tập/tuần</div></div>
+</div>
+
+<!-- ĐÁNH GIÁ THỂ TRẠNG -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">📋</div>
+    <div><h2>Đánh Giá Thể Trạng</h2><div class="sub">Phân tích từ ảnh chụp & chỉ số cơ thể</div></div>
+  </div>
+  <div class="assessment-grid">
+    <div class="assess-item"><div class="tag warn">Cần cải thiện</div><h4>Mỡ bụng tập trung</h4><p>Mỡ nội tạng và dưới da vùng bụng cao, dạng "skinny fat" — tay chân nhỏ nhưng bụng to.</p></div>
+    <div class="assess-item"><div class="tag warn">Cần cải thiện</div><h4>Tư thế cột sống</h4><p>Có dấu hiệu Anterior Pelvic Tilt nhẹ (xương chậu nghiêng trước), cần tập core để chỉnh tư thế.</p></div>
+    <div class="assess-item"><div class="tag note">Ghi nhận</div><h4>Cơ nền yếu</h4><p>Khối lượng cơ bắp tổng thể thấp — cần xây dựng nền tảng cơ bắp toàn thân.</p></div>
+    <div class="assess-item"><div class="tag good">Thuận lợi</div><h4>Tuổi & khả năng phục hồi</h4><p>28 tuổi là giai đoạn rất tốt để xây dựng cơ bắp, hormone tối ưu, phục hồi nhanh.</p></div>
+  </div>
+</div>
+
+<!-- LỘ TRÌNH 16 TUẦN -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🗺️</div>
+    <div><h2>Lộ Trình 16 Tuần</h2><div class="sub">3 giai đoạn, đánh giá lại mỗi 4 tuần</div></div>
+  </div>
+  <div class="phase-timeline">
+    <div class="phase-item"><div class="duration">Tuần 1–4 · Thích nghi</div><h4>Giai Đoạn 1: Làm Quen & Xây Nền</h4><p>Học đúng form bài tập, tạo thói quen ăn uống. Thâm hụt calo nhẹ (~300 kcal). Tập 3 buổi/tuần. Mục tiêu: giảm 1.5–2 kg.</p></div>
+    <div class="phase-item"><div class="duration">Tuần 5–10 · Đẩy mạnh</div><h4>Giai Đoạn 2: Tăng Cường Đốt Mỡ</h4><p>Tăng lên 4 buổi/tuần, thêm HIIT ngắn. Thâm hụt ~400 kcal. Tăng dần tải trọng. Mục tiêu: giảm thêm 2.5–3 kg mỡ.</p></div>
+    <div class="phase-item"><div class="duration">Tuần 11–16 · Hoàn thiện</div><h4>Giai Đoạn 3: Định Hình & Duy Trì</h4><p>Tinh chỉnh dinh dưỡng, tập trung các nhóm cơ yếu. Giảm thâm hụt xuống ~200 kcal để giữ cơ. Mục tiêu: giảm thêm 1.5–2 kg, cơ thể rõ nét hơn.</p></div>
+  </div>
+  <div class="tip-box"><strong>Kỳ vọng thực tế</strong>Sau 16 tuần: giảm 5–7 kg mỡ (xuống ~63–65 kg), tỷ lệ mỡ cơ thể giảm từ ~25% xuống ~18–20%. Bụng phẳng hơn rõ rệt, vai rộng hơn, tay chân có cơ.</div>
+</div>
+
+<!-- DINH DƯỠNG -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🍽️</div>
+    <div><h2>Kế Hoạch Dinh Dưỡng</h2><div class="sub">~1,800 kcal/ngày · Thâm hụt ~400 kcal</div></div>
+  </div>
+  <div class="tip-box"><strong>Cách tính</strong>BMR ≈ 1,600 kcal → TDEE (hoạt động nhẹ) ≈ 2,200 kcal → Cắt 400 kcal = <strong>1,800 kcal/ngày</strong>. Protein cao để giữ cơ, carb vừa đủ để có năng lượng tập, fat ở mức cần thiết cho hormone.</div>
+  <div class="macro-bar"><div class="seg-protein"></div><div class="seg-fat"></div><div class="seg-carb"></div></div>
+  <div class="macro-legend">
+    <div class="macro-item"><div class="macro-dot protein"></div><span class="val">140g</span><span class="name">Protein (31%)</span></div>
+    <div class="macro-item"><div class="macro-dot fat"></div><span class="val">55g</span><span class="name">Fat (28%)</span></div>
+    <div class="macro-item"><div class="macro-dot carb"></div><span class="val">185g</span><span class="name">Carb (41%)</span></div>
+  </div>
+
+  <h3 style="font-size:1rem; margin: var(--space-xl) 0 var(--space-md);">Thực đơn mẫu — Ngày tập</h3>
+  <div class="meal-plan">
+    <div class="meal-card">
+      <div class="meal-header"><h4>Bữa sáng</h4><span class="time">7:00 · ~420 kcal</span></div>
+      <div class="meal-body"><ul>
+        <li><span class="food">Yến mạch nấu nước</span><span class="amt">60g khô</span></li>
+        <li><span class="food">Trứng gà luộc</span><span class="amt">3 quả (2 nguyên, 1 lòng trắng)</span></li>
+        <li><span class="food">Chuối</span><span class="amt">1 quả nhỏ</span></li>
+      </ul></div>
+    </div>
+    <div class="meal-card">
+      <div class="meal-header"><h4>Bữa trưa</h4><span class="time">12:00 · ~530 kcal</span></div>
+      <div class="meal-body"><ul>
+        <li><span class="food">Cơm trắng</span><span class="amt">150g (1 bát con)</span></li>
+        <li><span class="food">Ức gà áp chảo / luộc</span><span class="amt">150g</span></li>
+        <li><span class="food">Rau xào (bông cải, cà rốt)</span><span class="amt">200g</span></li>
+        <li><span class="food">Dầu olive / dầu mè</span><span class="amt">1 muỗng canh</span></li>
+      </ul></div>
+    </div>
+    <div class="meal-card">
+      <div class="meal-header"><h4>Snack chiều (trước tập)</h4><span class="time">15:30 · ~200 kcal</span></div>
+      <div class="meal-body"><ul>
+        <li><span class="food">Bánh mì nguyên cám</span><span class="amt">1 lát</span></li>
+        <li><span class="food">Bơ đậu phộng</span><span class="amt">1 muỗng canh</span></li>
+      </ul></div>
+    </div>
+    <div class="meal-card">
+      <div class="meal-header"><h4>Bữa tối (sau tập)</h4><span class="time">19:30 · ~500 kcal</span></div>
+      <div class="meal-body"><ul>
+        <li><span class="food">Cơm trắng hoặc khoai lang</span><span class="amt">130g cơm / 200g khoai</span></li>
+        <li><span class="food">Cá hồi / cá basa nướng</span><span class="amt">150g</span></li>
+        <li><span class="food">Rau luộc (rau muống, mồng tơi)</span><span class="amt">200g</span></li>
+        <li><span class="food">Sữa chua không đường</span><span class="amt">1 hũ (100g)</span></li>
+      </ul></div>
+    </div>
+    <div class="meal-card">
+      <div class="meal-header"><h4>Snack tối (nếu đói)</h4><span class="time">21:00 · ~150 kcal</span></div>
+      <div class="meal-body"><ul>
+        <li><span class="food">Sữa tươi không đường</span><span class="amt">200ml</span></li>
+        <li><span class="food">Hạt hạnh nhân</span><span class="amt">10 hạt (~15g)</span></li>
+      </ul></div>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem; margin: var(--space-xl) 0 var(--space-md);">Thực đơn mẫu — Ngày nghỉ</h3>
+  <div class="tip-box"><strong>Ngày nghỉ giảm carb</strong>Giữ nguyên protein 140g, giảm carb xuống ~150g, fat giữ ~50g → tổng ~1,650 kcal. Bỏ snack chiều, giảm lượng cơm mỗi bữa xuống 100g.</div>
+
+  <details>
+    <summary>Bảng thay thế thực phẩm linh hoạt</summary>
+    <div class="detail-body">
+      <p><strong>Protein (chọn 1, ~150g mỗi bữa chính):</strong></p>
+      <ul style="padding-left:1.2em; margin: 4px 0 12px;"><li>Ức gà ↔ Đùi gà bỏ da ↔ Cá hồi ↔ Cá basa ↔ Thịt bò thăn ↔ Tôm (200g) ↔ Đậu hũ (250g)</li></ul>
+      <p><strong>Carb (chọn 1):</strong></p>
+      <ul style="padding-left:1.2em; margin: 4px 0 12px;"><li>Cơm trắng 150g ↔ Khoai lang 200g ↔ Bún/phở 180g ↔ Bánh mì nguyên cám 2 lát ↔ Yến mạch 60g</li></ul>
+      <p><strong>Rau (ăn thoải mái, tối thiểu 300g/ngày):</strong></p>
+      <ul style="padding-left:1.2em; margin: 4px 0 12px;"><li>Bông cải xanh, cà rốt, rau muống, mồng tơi, cải thìa, bắp cải, đậu cove, bí ngòi</li></ul>
+      <p><strong>Fat (chọn 1, ~1 muỗng canh/bữa):</strong></p>
+      <ul style="padding-left:1.2em; margin: 4px 0;"><li>Dầu olive ↔ Dầu mè ↔ Bơ đậu phộng ↔ Quả bơ (½ quả) ↔ Hạt điều/hạnh nhân (15g)</li></ul>
+    </div>
+  </details>
+</div>
+
+<!-- ===== LỊCH TẬP LUYỆN ===== -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🏋️</div>
+    <div><h2>Lịch Tập Luyện</h2><div class="sub">4 buổi/tuần · Upper/Lower Split · Newbie-friendly · Có GIF hướng dẫn</div></div>
+  </div>
+  <div class="tip-box"><strong>Nguyên tắc tập</strong>Luôn khởi động 5–10 phút (đi bộ nhanh hoặc nhảy dây nhẹ). Mỗi buổi tập ~50–60 phút. Nghỉ giữa set 60–90 giây. Chọn tạ vừa sức — rep cuối phải khó nhưng vẫn giữ được form chuẩn.</div>
+
+  <div class="training-week">
+
+    <!-- ======== THỨ 2 — PUSH ======== -->
+    <div class="day-card">
+      <div class="day-header">
+        <h4>Thứ 2 — Thân Trên A (Ngực + Vai + Tay sau)</h4>
+        <span class="badge">Push</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-list">
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-seated-chest-press.gif" alt="Chest Press"></div>
+            <div class="ex-info">
+              <h5>Đẩy ngực máy <span class="en">(Chest Press Machine)</span></h5>
+              <div class="ex-meta"><span class="sets">4 × 10–12</span><span>Nghỉ 90s</span></div>
+              <div class="ex-tip">Lưng áp sát ghế, đẩy ra từ từ, không khóa khuỷu tay.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-bench-press.gif" alt="Dumbbell Bench Press"></div>
+            <div class="ex-info">
+              <h5>Đẩy tạ đơn trên ghế phẳng <span class="en">(Dumbbell Bench Press)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 10–12</span><span>Nghỉ 75s</span></div>
+              <div class="ex-tip">Hạ tạ ngang ngực, khuỷu tay 45° so với thân. Ép ngực khi đẩy lên.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-seated-shoulder-press.gif" alt="Shoulder Press"></div>
+            <div class="ex-info">
+              <h5>Ép vai tạ đơn ngồi <span class="en">(Seated Shoulder Press)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 10–12</span><span>Nghỉ 75s</span></div>
+              <div class="ex-tip">Ngồi thẳng lưng, đẩy tạ lên đầu, không nghiêng người.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-lateral-raise.gif" alt="Lateral Raise"></div>
+            <div class="ex-info">
+              <h5>Nâng tạ ngang vai <span class="en">(Lateral Raise)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12–15</span><span>Nghỉ 60s</span></div>
+              <div class="ex-tip">Khuỷu tay hơi cong, nâng tạ ngang vai rồi hạ chậm. Đừng dùng lực quán tính.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-pushdown.gif" alt="Tricep Pushdown"></div>
+            <div class="ex-info">
+              <h5>Đẩy tay sau dây cáp <span class="en">(Tricep Cable Pushdown)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12–15</span><span>Nghỉ 60s</span></div>
+              <div class="ex-tip">Giữ khuỷu tay sát thân, chỉ di chuyển cẳng tay. Siết cơ tay sau ở dưới.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/front-plank-with-twist.gif" alt="Plank"></div>
+            <div class="ex-info">
+              <h5>Plank <span class="en">(Front Plank)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 30–45 giây</span><span>Nghỉ 45s</span></div>
+              <div class="ex-tip">Giữ thẳng từ đầu đến gót chân. Siết bụng, không để hông trùng xuống hoặc nhô lên.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== THỨ 3 — LEGS A ======== -->
+    <div class="day-card">
+      <div class="day-header">
+        <h4>Thứ 3 — Thân Dưới A (Chân + Mông)</h4>
+        <span class="badge">Legs</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-list">
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-goblet-squat.gif" alt="Goblet Squat"></div>
+            <div class="ex-info">
+              <h5>Squat goblet <span class="en">(Dumbbell Goblet Squat)</span></h5>
+              <div class="ex-meta"><span class="sets">4 × 10–12</span><span>Nghỉ 90s</span></div>
+              <div class="ex-tip">Giữ tạ đơn trước ngực, squat xuống song song hoặc sâu hơn. Đầu gối hướng ra ngoài.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/lever-alternate-leg-press.gif" alt="Leg Press"></div>
+            <div class="ex-info">
+              <h5>Leg Press máy <span class="en">(Leg Press Machine)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12</span><span>Nghỉ 90s</span></div>
+              <div class="ex-tip">Đặt chân rộng bằng vai trên bàn đạp. Hạ từ từ đến 90°, đẩy bằng gót chân.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/lever-lying-leg-curl.gif" alt="Leg Curl"></div>
+            <div class="ex-info">
+              <h5>Leg Curl máy <span class="en">(Lying Leg Curl)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12</span><span>Nghỉ 75s</span></div>
+              <div class="ex-tip">Nằm sấp, cuốn chân lên từ từ. Giữ hông ép sát ghế, không nhấc hông lên.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/lever-standing-calf-raise.gif" alt="Calf Raise"></div>
+            <div class="ex-info">
+              <h5>Calf Raise <span class="en">(Standing Calf Raise)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 15–20</span><span>Nghỉ 60s</span></div>
+              <div class="ex-tip">Nhón chân lên cao nhất có thể, giữ 1 giây trên đỉnh, hạ từ từ.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/dead-bug.gif" alt="Dead Bug"></div>
+            <div class="ex-info">
+              <h5>Dead Bug <span class="en">(Dead Bug — Chỉnh APT)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 10/bên</span><span>Nghỉ 45s</span></div>
+              <div class="ex-tip">Nằm ngửa, ép lưng dưới sát sàn. Duỗi tay-chân đối diện xen kẽ, thở ra khi duỗi.</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="tip-box" style="margin-top:var(--space-md);margin-bottom:0"><strong>Kết thúc buổi tập</strong>Đi bộ nhanh incline (máy chạy nghiêng 10–12%) trong 10 phút để đốt thêm mỡ.</div>
+      </div>
+    </div>
+
+    <!-- ======== THỨ 4 — NGHỈ ======== -->
+    <div class="day-card">
+      <div class="day-header rest"><h4>Thứ 4 — Nghỉ</h4><span class="badge rest-badge">Recovery</span></div>
+      <div class="day-body"><p style="font-size:0.86rem;color:var(--muted);margin:0">Đi bộ nhẹ 20–30 phút. Giãn cơ, foam rolling nếu có. Ngủ đủ 7–8 tiếng.</p></div>
+    </div>
+
+    <!-- ======== THỨ 5 — PULL ======== -->
+    <div class="day-card">
+      <div class="day-header">
+        <h4>Thứ 5 — Thân Trên B (Lưng + Tay trước)</h4>
+        <span class="badge">Pull</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-list">
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-pulldown.gif" alt="Lat Pulldown"></div>
+            <div class="ex-info">
+              <h5>Kéo xô máy <span class="en">(Lat Pulldown)</span></h5>
+              <div class="ex-meta"><span class="sets">4 × 10–12</span><span>Nghỉ 90s</span></div>
+              <div class="ex-tip">Nắm thanh rộng hơn vai, kéo xuống ngực trên. Siết lưng, không ngả người quá nhiều.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-seated-high-row-v-bar.gif" alt="Seated Row"></div>
+            <div class="ex-info">
+              <h5>Chèo thuyền máy <span class="en">(Seated Cable Row)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 10–12</span><span>Nghỉ 75s</span></div>
+              <div class="ex-tip">Ngồi thẳng, kéo tay cầm về phía bụng. Ép hai xương bả vai lại khi kéo.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-standing-rear-delt-row-with-rope.gif" alt="Face Pull"></div>
+            <div class="ex-info">
+              <h5>Kéo mặt <span class="en">(Cable Face Pull / Rear Delt Fly)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 15</span><span>Nghỉ 60s</span></div>
+              <div class="ex-tip">Dùng dây thừng, kéo về phía mặt, mở rộng hai tay ra ngoài. Siết vai sau.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-biceps-curl.gif" alt="Bicep Curl"></div>
+            <div class="ex-info">
+              <h5>Cuốn tạ đơn <span class="en">(Dumbbell Bicep Curl)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12</span><span>Nghỉ 60s</span></div>
+              <div class="ex-tip">Giữ khuỷu tay sát thân, cuốn tạ lên bằng cơ tay trước. Hạ từ từ, không đu đưa.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-hammer-curl.gif" alt="Hammer Curl"></div>
+            <div class="ex-info">
+              <h5>Hammer Curl <span class="en">(Dumbbell Hammer Curl)</span></h5>
+              <div class="ex-meta"><span class="sets">2 × 12</span><span>Nghỉ 60s</span></div>
+              <div class="ex-tip">Lòng bàn tay hướng vào nhau (nắm đứng). Tập cẳng tay và tay trước bên ngoài.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/bodyweight-incline-side-plank.gif" alt="Side Plank"></div>
+            <div class="ex-info">
+              <h5>Plank nghiêng <span class="en">(Side Plank)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 20–30s/bên</span><span>Nghỉ 45s</span></div>
+              <div class="ex-tip">Chống khuỷu tay, nâng hông lên thẳng hàng. Siết cơ liên sườn (cơ hông).</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== THỨ 6 — LEGS B + HIIT ======== -->
+    <div class="day-card">
+      <div class="day-header">
+        <h4>Thứ 6 — Thân Dưới B + HIIT</h4>
+        <span class="badge">Legs + Cardio</span>
+      </div>
+      <div class="day-body">
+        <div class="exercise-list">
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/barbell-straight-leg-deadlift.gif" alt="Romanian Deadlift"></div>
+            <div class="ex-info">
+              <h5>Romanian Deadlift <span class="en">(Tạ đơn hoặc thanh tạ)</span></h5>
+              <div class="ex-meta"><span class="sets">4 × 10</span><span>Nghỉ 90s</span></div>
+              <div class="ex-tip">Giữ lưng thẳng, gập hông ra sau, hạ tạ dọc chân. Cảm nhận căng đùi sau rồi đứng lên.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-single-leg-split-squat.gif" alt="Bulgarian Split Squat"></div>
+            <div class="ex-info">
+              <h5>Bulgarian Split Squat <span class="en">(Squat chân sau trên ghế)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 10/chân</span><span>Nghỉ 75s</span></div>
+              <div class="ex-tip">Chân sau đặt trên ghế, squat xuống bằng chân trước. Đầu gối không vượt quá mũi chân.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/lever-leg-extension.gif" alt="Leg Extension"></div>
+            <div class="ex-info">
+              <h5>Leg Extension <span class="en">(Duỗi chân máy — Đùi trước)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12</span><span>Nghỉ 60s</span></div>
+              <div class="ex-tip">Duỗi thẳng chân lên, giữ 1 giây trên đỉnh, hạ chậm. Không dùng quán tính.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/hip-raise-bent-knee.gif" alt="Hip Thrust"></div>
+            <div class="ex-info">
+              <h5>Hip Thrust / Cầu mông <span class="en">(Hip Raise / Glute Bridge)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12</span><span>Nghỉ 75s</span></div>
+              <div class="ex-tip">Nằm ngửa, chân co, đẩy hông lên siết mông ở trên đỉnh. Có thể đặt tạ lên hông khi tiến bộ.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/crunch-floor.gif" alt="Crunch"></div>
+            <div class="ex-info">
+              <h5>Gập bụng <span class="en">(Floor Crunch)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 15</span><span>Nghỉ 45s</span></div>
+              <div class="ex-tip">Nằm ngửa, tay chéo ngực hoặc sau đầu. Gập thân lên nhẹ, siết bụng, không kéo cổ.</div>
+            </div>
+          </div>
+
+          <div class="ex-card">
+            <div class="ex-gif-wrap"><img src="https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/lying-leg-hip-raise.gif" alt="Leg Raise"></div>
+            <div class="ex-info">
+              <h5>Nâng chân <span class="en">(Lying Leg Hip Raise)</span></h5>
+              <div class="ex-meta"><span class="sets">3 × 12</span><span>Nghỉ 45s</span></div>
+              <div class="ex-tip">Nằm ngửa, nâng chân thẳng lên 90°, hạ từ từ. Ép lưng dưới sát sàn suốt động tác.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tip-box" style="margin-top:var(--space-md);margin-bottom:0">
+          <strong>HIIT sau tập tạ (10 phút) — Từ tuần 5</strong>
+          Máy chạy hoặc xe đạp: 30 giây nhanh hết sức → 60 giây nhẹ → Lặp lại 6–8 vòng.
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== THỨ 7 + CN ======== -->
+    <div class="day-card">
+      <div class="day-header rest"><h4>Thứ 7 & Chủ nhật — Nghỉ</h4><span class="badge rest-badge">Recovery</span></div>
+      <div class="day-body"><p style="font-size:0.86rem;color:var(--muted);margin:0">Thứ 7: Active recovery — đi bộ, bơi nhẹ, hoặc yoga kéo giãn 30 phút.<br>Chủ nhật: Nghỉ hoàn toàn. Chuẩn bị meal prep cho tuần mới.</p></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DANH SÁCH ĐI CHỢ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">🛒</div>
+    <div><h2>Danh Sách Đi Chợ Tuần</h2><div class="sub">Nguồn thực phẩm dễ tìm, giá hợp lý tại Việt Nam</div></div>
+  </div>
+  <div class="shop-grid">
+    <div class="shop-card"><h4>Protein</h4><ul>
+      <li>Ức gà (1.5 kg/tuần)</li><li>Cá hồi hoặc cá basa (500g)</li><li>Trứng gà (2 vỉ = 20 quả)</li>
+      <li>Đậu hũ trắng (4 bìa)</li><li>Tôm tươi (300g)</li><li>Sữa tươi không đường (2L)</li><li>Sữa chua không đường (7 hũ)</li>
+    </ul></div>
+    <div class="shop-card"><h4>Carb</h4><ul>
+      <li>Gạo trắng (2 kg)</li><li>Yến mạch cán dẹt (500g)</li><li>Khoai lang (1 kg)</li><li>Bánh mì nguyên cám (1 ổ)</li><li>Chuối (1 nải)</li>
+    </ul></div>
+    <div class="shop-card"><h4>Rau & Trái Cây</h4><ul>
+      <li>Bông cải xanh (500g)</li><li>Cà rốt (500g)</li><li>Rau muống / mồng tơi (1kg)</li><li>Bắp cải (1 bắp)</li><li>Cà chua (500g)</li><li>Táo hoặc cam (5–7 quả)</li>
+    </ul></div>
+    <div class="shop-card"><h4>Chất béo & Gia vị</h4><ul>
+      <li>Dầu olive (1 chai nhỏ)</li><li>Bơ đậu phộng (1 hũ)</li><li>Hạt hạnh nhân / điều (200g)</li><li>Tỏi, hành, gừng</li><li>Nước mắm, tiêu, ớt</li><li>Muối hồng (tùy chọn)</li>
+    </ul></div>
+  </div>
+  <div class="tip-box"><strong>Ước tính chi phí</strong>Khoảng 600.000–800.000đ/tuần cho toàn bộ thực phẩm. Mua ức gà đông lạnh và cá basa để tiết kiệm. Mua rau ở chợ truyền thống rẻ hơn siêu thị.</div>
+</div>
+
+<!-- BỔ SUNG -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">💊</div>
+    <div><h2>Thực Phẩm Bổ Sung (Tùy Chọn)</h2><div class="sub">Không bắt buộc — ưu tiên thức ăn thật</div></div>
+  </div>
+  <div class="supp-list">
+    <div class="supp-item"><span class="supp-name">Whey Protein</span><span class="supp-desc">1 scoop (25g protein) sau tập nếu bữa tối xa giờ tập. Ưu tiên: Muscle Tech, ON, hoặc Rule 1.</span></div>
+    <div class="supp-item"><span class="supp-name">Creatine Monohydrate</span><span class="supp-desc">5g/ngày pha với nước, uống bất kỳ lúc nào. Giúp tăng sức mạnh và giữ nước trong cơ.</span></div>
+    <div class="supp-item"><span class="supp-name">Multivitamin</span><span class="supp-desc">1 viên/ngày sau bữa sáng. Bổ sung các vi chất khi cắt calo.</span></div>
+    <div class="supp-item"><span class="supp-name">Dầu cá (Fish Oil)</span><span class="supp-desc">1,000mg/ngày. Hỗ trợ giảm viêm, tốt cho tim mạch và khớp.</span></div>
+  </div>
+</div>
+
+<!-- NGUYÊN TẮC VÀNG -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">⚡</div>
+    <div><h2>Nguyên Tắc Vàng</h2><div class="sub">Những điều quyết định 80% kết quả</div></div>
+  </div>
+  <details>
+    <summary>Về dinh dưỡng</summary>
+    <div class="detail-body"><ul style="padding-left:1.2em;">
+      <li><strong>Protein là ưu tiên số 1:</strong> Mỗi bữa chính phải có ít nhất 30–40g protein.</li>
+      <li><strong>Uống đủ nước:</strong> Tối thiểu 2.5–3 lít/ngày.</li>
+      <li><strong>Không cần cắt hoàn toàn carb:</strong> Carb cung cấp năng lượng tập luyện. Chỉ giảm lượng.</li>
+      <li><strong>Hạn chế:</strong> Trà sữa, nước ngọt, bia rượu, đồ chiên rán, fast food. Mỗi ly trà sữa = 400–600 kcal.</li>
+      <li><strong>Meal prep:</strong> Nấu sẵn protein + cơm cho 2–3 ngày vào Chủ nhật và Thứ 4 tối.</li>
+    </ul></div>
+  </details>
+  <details>
+    <summary>Về tập luyện</summary>
+    <div class="detail-body"><ul style="padding-left:1.2em;">
+      <li><strong>Form chuẩn trước, tăng tạ sau:</strong> 4 tuần đầu tập nhẹ, học form.</li>
+      <li><strong>Progressive overload:</strong> Mỗi tuần cố gắng tăng 1–2 rep hoặc 1–2 kg. Ghi chép lại.</li>
+      <li><strong>Không bỏ ngày chân:</strong> Tập chân đốt calo nhiều nhất và tăng hormone tăng trưởng.</li>
+      <li><strong>Core mỗi buổi:</strong> Plank, Dead Bug, Side Plank giúp chỉnh APT và thu nhỏ vòng eo.</li>
+      <li><strong>Cardio phụ trợ:</strong> Ưu tiên đi bộ nhanh incline hơn chạy bộ. Đỡ hại khớp.</li>
+    </ul></div>
+  </details>
+  <details>
+    <summary>Về sinh hoạt & phục hồi</summary>
+    <div class="detail-body"><ul style="padding-left:1.2em;">
+      <li><strong>Ngủ 7–8 tiếng/đêm:</strong> Thiếu ngủ tăng cortisol → tích mỡ bụng.</li>
+      <li><strong>Theo dõi tiến trình:</strong> Cân mỗi sáng, lấy trung bình tuần. Chụp ảnh mỗi 2 tuần.</li>
+      <li><strong>Kiên nhẫn:</strong> Mỡ bụng giảm sau cùng. Đừng nản nếu 4 tuần đầu bụng chưa thay đổi nhiều.</li>
+      <li><strong>Cheat meal:</strong> 1 bữa/tuần được ăn thoải mái hơn (không phải cheat day).</li>
+    </ul></div>
+  </details>
+</div>
+
+<!-- THEO DÕI TIẾN TRÌNH -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon">📊</div>
+    <div><h2>Theo Dõi Tiến Trình</h2><div class="sub">Đo lường mỗi 2 tuần</div></div>
+  </div>
+  <div class="assessment-grid">
+    <div class="assess-item"><div class="tag note">Đo</div><h4>Cân nặng</h4><p>Cân mỗi sáng, lấy trung bình tuần. Giảm 0.3–0.5 kg/tuần là lý tưởng.</p></div>
+    <div class="assess-item"><div class="tag note">Đo</div><h4>Vòng eo</h4><p>Đo ngang rốn, sáng sớm trước ăn. Mục tiêu: giảm 1–2 cm/tháng.</p></div>
+    <div class="assess-item"><div class="tag note">Chụp</div><h4>Ảnh tiến trình</h4><p>Chụp trước, nghiêng, sau mỗi 2 tuần. Cùng góc, cùng ánh sáng.</p></div>
+    <div class="assess-item"><div class="tag note">Ghi</div><h4>Nhật ký tập</h4><p>Ghi lại bài tập, số tạ, số rep mỗi buổi. Dùng app Strong hoặc sổ tay.</p></div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>Kế hoạch dành riêng cho: Nguyễn Anh Tuấn</strong><br>
+  Được xây dựng dựa trên đánh giá thể trạng cá nhân.<br>
+  Nên tham khảo ý kiến bác sĩ trước khi bắt đầu chương trình tập luyện mới.<br>
+  Cập nhật: Tháng 10/2026</p>
+</div>
+
+</body>
+</html>
